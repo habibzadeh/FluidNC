@@ -4,6 +4,7 @@
 #pragma once
 
 #include <Print.h>
+#include <filesystem>
 #include <IPAddress.h>
 #include <string>
 #include <string_view>
@@ -27,6 +28,13 @@ inline Print& operator<<(Print& lhs, const std::string& v) {
 
 inline Print& operator<<(Print& lhs, const std::u8string& v) {
     std::string normal_str(v.begin(), v.end());
+    lhs.print(normal_str.c_str());
+    return lhs;
+}
+
+inline Print& operator<<(Print& lhs, const std::filesystem::path& v) {
+    auto u8str = v.u8string();
+    std::string normal_str(u8str.begin(), u8str.end());
     lhs.print(normal_str.c_str());
     return lhs;
 }

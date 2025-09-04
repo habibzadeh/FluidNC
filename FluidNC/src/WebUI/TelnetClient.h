@@ -29,9 +29,9 @@ namespace WebUI {
         int32_t    rx_buffer_available() override;
         size_t write(uint8_t data) override;
         size_t write(const uint8_t* buffer, size_t size) override;
-        int32_t    read(void) override;
-        int32_t    peek(void) override;
-        int32_t    available() override;
+        int    read(void) override;
+        int    peek(void) override;
+        int    available() override;
         void   flush() override {}
         void   flushRx() override;
 

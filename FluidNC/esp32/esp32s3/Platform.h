@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cstdint>
 #define WEAK_LINK __attribute__((weak))
 #define WITH_MBEDTLS
 

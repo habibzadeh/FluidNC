@@ -232,6 +232,12 @@ void JSONencoder::member(const char* tag, const std::string& value) {
     quoted(value.c_str());
 }
 
+// Creates a "tag":"value" member from a C++ string
+void JSONencoder::member(const char* tag, const std::u8string& value) {
+    std::string normal_str(value.begin(), value.end());
+    member(tag, normal_str);
+}
+
 // Creates a "tag":"value" member from an integer
 void JSONencoder::member(const char* tag, int32_t value) {
     member(tag, std::to_string(value));
@@ -239,6 +245,11 @@ void JSONencoder::member(const char* tag, int32_t value) {
 
 // Creates an Esp32_WebUI configuration item specification from
 // a value passed in as a C-style string.
+void JSONencoder::begin_webui(const std::string name, const char* type, const std::u8string& val) {
+    std::string normal_str(val.begin(), val.end());
+    begin_webui(name, type, normal_str);
+}
+
 void JSONencoder::begin_webui(const std::string name, const char* type, const char* val) {
     begin_object();
     member("F", category);

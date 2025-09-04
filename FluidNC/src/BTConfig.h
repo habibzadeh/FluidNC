@@ -24,9 +24,9 @@ namespace WebUI {
         BTChannel() : Channel("bluetooth", true) { _lineedit = new Lineedit(this, _line, Channel::maxLine - 1); }
         virtual ~BTChannel() = default;
 
-        int32_t available() override;
-        int32_t read() override;
-        int32_t peek() override;
+        int available() override;
+        int read() override;
+        int peek() override;
         void    flush() override { SerialBT.flush(); }
         size_t  write(uint8_t data) override;
         // 512 is RX_QUEUE_SIZE which is defined in BluetoothSerial.cpp but not in its .h

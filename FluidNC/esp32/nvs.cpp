@@ -21,33 +21,33 @@ NVS::NVS(const char* name) {
 }
 
 bool NVS::get_str(const char* name, char* value, size_t* len) {
-    return nvs_get_str(handle(), name, value, len) || nvs_commit(handle());
+    return nvs_get_str(handle(), name, value, len);
 }
 bool NVS::set_str(const char* name, const char* value) {
     return nvs_set_str(handle(), name, value) || nvs_commit(handle());
 }
 bool NVS::get_i32(const char* name, int32_t* value) {
-    return nvs_get_i32(handle(), name, value) || nvs_commit(handle());
+    return nvs_get_i32(handle(), name, value);
 }
 bool NVS::set_i32(const char* name, int32_t value) {
     return nvs_set_i32(handle(), name, value) || nvs_commit(handle());
 }
 bool NVS::get_i8(const char* key, int8_t* out_value) {
-    return nvs_get_i8(handle(), key, out_value) || nvs_commit(handle());
+    return nvs_get_i8(handle(), key, out_value);
 }
 bool NVS::set_i8(const char* key, int8_t value) {
     return nvs_set_i8(handle(), key, value) || nvs_commit(handle());
 }
 #if 0
 bool NVS::get_i16(const char* key, int16_t* out_value) {
-    return nvs_get_i16(handle(), key, out_value) || nvs_commit(handle());
+    return nvs_get_i16(handle(), key, out_value);
 }
 bool NVS::set_i16(const char* key, int16_t value) {
     return nvs_set_i16(handle(), key, value) || nvs_commit(handle());
 }
 #endif
 bool NVS::get_blob(const char* key, void* out_value, size_t* length) {
-    return nvs_get_blob(handle(), key, out_value, length) || nvs_commit(handle());
+    return nvs_get_blob(handle(), key, out_value, length);
 }
 bool NVS::set_blob(const char* key, const void* value, size_t length) {
     return nvs_set_blob(handle(), key, value, length) || nvs_commit(handle());

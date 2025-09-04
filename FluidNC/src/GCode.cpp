@@ -1795,6 +1795,14 @@ Error gc_execute_line(const char* input_line) {
     // [19. Go to predefined position, Set G10, or Set axis offsets ]:
     switch (gc_block.non_modal_command) {
         case NonModal::SetCoordinateData:
+        case NonModal::SetHome0:
+        case NonModal::SetHome1:
+            if (FORCE_BUFFER_SYNC_DURING_NVS_WRITE) {
+                protocol_buffer_synchronize();
+            }
+    }
+    switch (gc_block.non_modal_command) {
+        case NonModal::SetCoordinateData:
             coords[coord_select]->set(coord_data);
             gc_wco_changed();
             // Update system coordinate system if currently active.

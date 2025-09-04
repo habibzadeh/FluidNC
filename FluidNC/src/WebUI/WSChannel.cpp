@@ -15,7 +15,7 @@ namespace WebUI {
 
     WSChannel::WSChannel(WebSocketsServer* server, uint8_t clientNum) : Channel("websocket"), _server(server), _clientNum(clientNum) {}
 
-    int32_t WSChannel::read() {
+    int WSChannel::read() {
         if (!_active) {
             return -1;
         }
@@ -60,11 +60,13 @@ namespace WebUI {
             out    = (uint8_t*)_output_line.c_str();
             outlen = _output_line.length();
         }
+#if 0
         int32_t stat = _server->canSend(_clientNum);
         if (stat < 0) {
             _active = false;
             return 0;
         }
+#endif
         if (!_server->sendBIN(_clientNum, out, outlen)) {
             _active = false;
         }
@@ -91,6 +93,7 @@ namespace WebUI {
         if (!_active) {
             return;
         }
+#if 0
         int32_t stat = _server->canSend(_clientNum);
         if (stat < 0) {
             _active = false;
@@ -100,6 +103,7 @@ namespace WebUI {
         if (stat == 0) {
             return;
         }
+#endif
 
         Channel::autoReport();
     }

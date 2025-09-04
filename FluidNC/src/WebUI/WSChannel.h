@@ -23,9 +23,7 @@ namespace WebUI {
         bool sendTXT(std::string& s);
 
         inline size_t write(const char* s) { return write((uint8_t*)s, ::strlen(s)); }
-        inline size_t write(unsigned long n) { return write((uint8_t)n); }
-        inline size_t write(long n) { return write((uint8_t)n); }
-        inline size_t write(unsigned int32_t n) { return write((uint8_t)n); }
+        inline size_t write(uint32_t n) { return write((uint8_t)n); }
         inline size_t write(int32_t n) { return write((uint8_t)n); }
 
         void flush(void) override {}
@@ -38,8 +36,8 @@ namespace WebUI {
 
         ~WSChannel();
 
-        int32_t read() override;
-        int32_t available() override { return _queue.size() + (_rtchar > -1); }
+        int read() override;
+        int available() override { return _queue.size() + (_rtchar > -1); }
 
         void autoReport() override;
 

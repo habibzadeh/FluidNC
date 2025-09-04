@@ -97,7 +97,8 @@ void stepTimerInit(uint32_t frequency, bool (*callback)(void)) {
 
     intr_handle_t intr;
     //    esp_intr_alloc_intrstatus(soc_timg_gptimer_signals[TIMER_GROUP_0][TIMER_0].irq_id,
-    esp_intr_alloc_intrstatus(ETS_TG0_T0_LEVEL_INTR_SOURCE,
+    //    esp_intr_alloc_intrstatus(ETS_TG0_T0_LEVEL_INTR_SOURCE,
+    esp_intr_alloc_intrstatus(0,
                               ESP_INTR_FLAG_IRAM | ESP_INTR_FLAG_LEVEL3,
                               (uint32_t)timer_ll_get_intr_status_reg(&TIMERG0),
                               TIMER_LL_EVENT_ALARM(TIMER_0),

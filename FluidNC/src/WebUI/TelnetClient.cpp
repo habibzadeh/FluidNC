@@ -55,11 +55,11 @@ namespace WebUI {
         return length;
     }
 
-    int32_t TelnetClient::peek(void) {
+    int TelnetClient::peek(void) {
         return _wifiClient->peek();
     }
 
-    int32_t TelnetClient::available() {
+    int TelnetClient::available() {
         return _wifiClient->available();
     }
 
@@ -67,7 +67,7 @@ namespace WebUI {
         return WIFI_CLIENT_READ_BUFFER_SIZE - available();
     }
 
-    int32_t TelnetClient::read(void) {
+    int TelnetClient::read(void) {
         if (_state == -1) {
             return -1;
         }

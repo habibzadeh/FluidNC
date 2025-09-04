@@ -24,6 +24,7 @@
 #include <cstring>
 
 #include <esp_ota_ops.h>
+#include <esp_netif.h>
 
 namespace WebUI {
     enum WiFiStartupMode {
@@ -258,9 +259,12 @@ namespace WebUI {
                         j.id_value_object("Phy Mode", modeName);
                         j.id_value_object("Channel", WiFi.channel());
 
-                        tcpip_adapter_dhcp_status_t dhcp_status;
-                        tcpip_adapter_dhcpc_get_status(TCPIP_ADAPTER_IF_STA, &dhcp_status);
-                        j.id_value_object("IP Mode", (dhcp_status == TCPIP_ADAPTER_DHCP_STARTED ? "DHCP" : "Static"));
+#if 0
+                        esp_netif_dhcp_status_t dhcp_status;
+                        esp_netif = get_esp_interface_netif(ESP_IF_WIFI_STA);
+                        esp_netif_dhcpc_get_status(esp_netif, &dhcp_status);
+                        j.id_value_object("IP Mode", (dhcp_status == ESP_NETIF_DHCP_STARTED ? "DHCP" : "Static"));
+#endif
                         j.id_value_object("IP", IP_string(WiFi.localIP()));
                         j.id_value_object("Gateway", IP_string(WiFi.gatewayIP()));
                         j.id_value_object("Mask", IP_string(WiFi.subnetMask()));
@@ -306,21 +310,22 @@ namespace WebUI {
                     j.id_value_object("Authentication", mode);
                     j.id_value_object("Max Connections", conf.ap.max_connection);
 
-                    tcpip_adapter_dhcp_status_t dhcp_status;
-                    tcpip_adapter_dhcps_get_status(TCPIP_ADAPTER_IF_AP, &dhcp_status);
-                    j.id_value_object("DHCP Server", (dhcp_status == TCPIP_ADAPTER_DHCP_STARTED ? "Started" : "Stopped"));
+#if 0
+                    esp_netif = get_esp_interface_netif(ESP_IF_WIFI_AP);
+                    esp_netif_dhcp_status_t dhcp_status;
+                    esp_netif_dhcps_get_status(ESP_NETIF_IF_AP, &dhcp_status);
+                    j.id_value_object("DHCP Server", (dhcp_status == ESP_NETIF_DHCP_STARTED ? "Started" : "Stopped"));
+#endif
 
                     j.id_value_object("IP", IP_string(WiFi.softAPIP()));
+                    j.id_value_object("Gateway", IP_string(WiFi.gatewayIP()));
+                    j.id_value_object("Mask", IP_string(WiFi.softAPSubnetMask()));
 
-                    tcpip_adapter_ip_info_t ip_AP;
-                    tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_AP, &ip_AP);
-                    j.id_value_object("Gateway", IP_string(IPAddress(ip_AP.gw.addr)));
-                    j.id_value_object("Mask", IP_string(IPAddress(ip_AP.netmask.addr)));
-
-                    wifi_sta_list_t          station;
-                    tcpip_adapter_sta_list_t tcpip_sta_list;
+#if 0
+                    wifi_sta_list_t      station;
+                    esp_netif_sta_list_t tcpip_sta_list;
                     esp_wifi_ap_get_sta_list(&station);
-                    tcpip_adapter_get_sta_list(&station, &tcpip_sta_list);
+                    esp_netif_get_sta_list(&station, &tcpip_sta_list);
                     j.id_value_object("Connected channels", station.num);
 
                     for (int32_t i = 0; i < station.num; i++) {
@@ -328,6 +333,7 @@ namespace WebUI {
                                           std::string("") + mac2str(tcpip_sta_list.sta[i].mac) + " " +
                                               IP_string(IPAddress(tcpip_sta_list.sta[i].ip.addr)));
                     }
+#endif
                     j.id_value_object("Disabled Mode", std::string("STA (") + WiFi.macAddress().c_str() + ")");
                     break;
                 case WIFI_AP_STA:  //we should not be in this state but just in case ....
@@ -386,9 +392,11 @@ namespace WebUI {
                         log_stream(out, "Phy Mode: " << phyModeName);
                         log_stream(out, "Channel: " << WiFi.channel());
 
-                        tcpip_adapter_dhcp_status_t dhcp_status;
-                        tcpip_adapter_dhcpc_get_status(TCPIP_ADAPTER_IF_STA, &dhcp_status);
-                        log_stream(out, "IP Mode: " << (dhcp_status == TCPIP_ADAPTER_DHCP_STARTED ? "DHCP" : "Static"));
+#if 0
+                        esp_netif_dhcp_status_t dhcp_status;
+                        esp_netif_dhcpc_get_status(ESP_NETIF_IF_STA, &dhcp_status);
+                        log_stream(out, "IP Mode: " << (dhcp_status == ESP_NETIF_DHCP_STARTED ? "DHCP" : "Static"));
+#endif
                         log_stream(out, "IP: " << IP_string(WiFi.localIP()));
                         log_stream(out, "Gateway: " << IP_string(WiFi.gatewayIP()));
                         log_stream(out, "Mask: " << IP_string(WiFi.subnetMask()));
@@ -434,27 +442,27 @@ namespace WebUI {
 
                     log_stream(out, "Authentication: " << mode);
                     log_stream(out, "Max Connections: " << conf.ap.max_connection);
-
-                    tcpip_adapter_dhcp_status_t dhcp_status;
-                    tcpip_adapter_dhcps_get_status(TCPIP_ADAPTER_IF_AP, &dhcp_status);
-                    log_stream(out, "DHCP Server: " << (dhcp_status == TCPIP_ADAPTER_DHCP_STARTED ? "Started" : "Stopped"));
+#if 0
+                    esp_netif_dhcp_status_t dhcp_status;
+                    esp_netif_dhcps_get_status(ESP_NETIF_IF_AP, &dhcp_status);
+                    log_stream(out, "DHCP Server: " << (dhcp_status == ESP_NETIF_DHCP_STARTED ? "Started" : "Stopped"));
+#endif
 
                     log_stream(out, "IP: " << IP_string(WiFi.softAPIP()));
+                    log_stream(out, "Gateway: " << IP_string(WiFi.gatewayIP()));
+                    log_stream(out, "Mask: " << IP_string(WiFi.subnetMask()));
 
-                    tcpip_adapter_ip_info_t ip_AP;
-                    tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_AP, &ip_AP);
-                    log_stream(out, "Gateway: " << IP_string(IPAddress(ip_AP.gw.addr)));
-                    log_stream(out, "Mask: " << IP_string(IPAddress(ip_AP.netmask.addr)));
-
-                    wifi_sta_list_t          station;
-                    tcpip_adapter_sta_list_t tcpip_sta_list;
+#if 0
+                    wifi_sta_list_t      station;
+                    esp_netif_sta_list_t tcpip_sta_list;
                     esp_wifi_ap_get_sta_list(&station);
-                    tcpip_adapter_get_sta_list(&station, &tcpip_sta_list);
+                    esp_netif_get_sta_list(&station, &tcpip_sta_list);
                     log_stream(out, "Connected channels: " << station.num);
 
                     for (int32_t i = 0; i < station.num; i++) {
                         log_stream(out, mac2str(tcpip_sta_list.sta[i].mac) << " " << IP_string(IPAddress(tcpip_sta_list.sta[i].ip.addr)));
                     }
+#endif
                     print_mac(out, "Disabled Mode: STA", WiFi.macAddress().c_str());
                     break;
                 case WIFI_AP_STA:  //we should not be in this state but just in case ....
@@ -644,19 +652,19 @@ namespace WebUI {
         static void WiFiEvent(WiFiEvent_t event) {
             static bool disconnect_seen = false;
             switch (event) {
-                case SYSTEM_EVENT_STA_GOT_IP:
+                case IP_EVENT_STA_GOT_IP:
                     break;
-                case SYSTEM_EVENT_STA_DISCONNECTED:
+                case WIFI_EVENT_STA_DISCONNECTED:
                     if (!disconnect_seen) {
                         log_info_to(Console, "WiFi Disconnected");
                         disconnect_seen = true;
                     }
                     break;
-                case SYSTEM_EVENT_STA_START:
+                case WIFI_EVENT_STA_START:
                     break;
-                case SYSTEM_EVENT_STA_STOP:
+                case WIFI_EVENT_STA_STOP:
                     break;
-                case SYSTEM_EVENT_STA_CONNECTED:
+                case WIFI_EVENT_STA_CONNECTED:
                     disconnect_seen = false;
                     log_info_to(Console, "WiFi STA Connected");
                     break;

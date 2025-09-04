@@ -51,6 +51,7 @@ public:
     // member() creates a "tag":"value" element
     void member(const char* tag, const char* value);
     void member(const char* tag, const std::string& value);
+    void member(const char* tag, const std::u8string& value);
     void member(const char* tag, int32_t value);
 
     // begin_array() starts a "tag":[  array element
@@ -94,6 +95,7 @@ public:
     //  I => 0 .. 2^31-1
     void begin_webui(const std::string name, const char* type, const std::string& val) { begin_webui(name, type, val.c_str()); }
     void begin_webui(const std::string name, const char* type, const char* val);
+    void begin_webui(const std::string name, const char* type, const std::u8string& val);
     void begin_webui(const std::string name, const char* type, const int32_t val);
     void begin_webui(const std::string name, const char* type, const char* val, int32_t min, int32_t max);
 

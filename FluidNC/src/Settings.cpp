@@ -1,7 +1,6 @@
 #include "Settings.h"
 
-#include "System.h"    // sys
-#include "Protocol.h"  // protocol_buffer_synchronize
+#include "System.h"  // sys
 #include "Machine/MachineConfig.h"
 
 #include <map>
@@ -13,30 +12,6 @@
 
 std::vector<Setting*> Setting::List __attribute__((init_priority(101))) = {};
 std::vector<Command*> Command::List __attribute__((init_priority(102))) = {};
-
-bool get_param(const char* parameter, const char* key, std::string& s) {
-    const char* start = strstr(parameter, key);
-    if (!start) {
-        return false;
-    }
-    s = "";
-    for (const char* p = start + strlen(key); *p; ++p) {
-        if (*p == ' ') {
-            break;  // Unescaped space
-        }
-        if (*p == '\\') {
-            if (*++p == '\0') {
-                break;
-            }
-        }
-        s += *p;
-    }
-    return true;
-}
-
-bool paramIsJSON(const char* cmd_params) {
-    return strstr(cmd_params, "json=yes") != NULL;
-}
 
 bool anyState() {
     return false;
@@ -208,8 +183,8 @@ StringSetting::StringSetting(const char*   description,
                              const char*   grblName,
                              const char*   name,
                              const char*   defVal,
-                             int32_t           min,
-                             int32_t           max) :
+                             int32_t       min,
+                             int32_t       max) :
     Setting(description, type, permissions, grblName, name),
     _defaultValue(defVal), _currentValue(defVal), _minLength(min), _maxLength(max) {
     load();
@@ -416,9 +391,6 @@ bool Coordinates::load() {
 
 void Coordinates::set(float value[MAX_N_AXIS]) {
     memcpy(&_currentValue, value, sizeof(_currentValue));
-    if (FORCE_BUFFER_SYNC_DURING_NVS_WRITE) {
-        protocol_buffer_synchronize();
-    }
     nvs.set_blob(_name, _currentValue, sizeof(_currentValue));
 }
 
